@@ -1,11 +1,15 @@
 # flake8: noqa
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+if os.path.exists(os.path.join(BASE_DIR, '.env')):
+    with open(os.path.join(BASE_DIR, '.env')) as f:
+        for line in f:
+            if line.strip() and not line.startswith('#'):
+                key, value = line.strip().split('=', 1)
+                os.environ[key] = value
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
